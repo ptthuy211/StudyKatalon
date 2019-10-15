@@ -1,47 +1,11 @@
-import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
-import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
-import static com.kms.katalon.core.testdata.TestDataFactory.findTestData
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 
-import com.kms.katalon.core.annotation.Keyword
-import com.kms.katalon.core.checkpoint.Checkpoint
-import com.kms.katalon.core.checkpoint.CheckpointFactory
-import com.kms.katalon.core.mobile.keyword.MobileBuiltInKeywords
-import com.kms.katalon.core.model.FailureHandling
-import com.kms.katalon.core.testcase.TestCase
-import com.kms.katalon.core.testcase.TestCaseFactory
-import com.kms.katalon.core.testdata.TestData
-import com.kms.katalon.core.testdata.TestDataFactory
-import com.kms.katalon.core.testobject.ObjectRepository
-import com.kms.katalon.core.testobject.TestObject
-import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords
-import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords
-
-import internal.GlobalVariable
-
-import MobileBuiltInKeywords as Mobile
-import WSBuiltInKeywords as WS
-import WebUiBuiltInKeywords as WebUI
-
-import org.openqa.selenium.WebElement
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.By
-
-import com.kms.katalon.core.mobile.keyword.internal.MobileDriverFactory
-import com.kms.katalon.core.webui.driver.DriverFactory
-
-import com.kms.katalon.core.testobject.RequestObject
-import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.testobject.ConditionType
-import com.kms.katalon.core.testobject.TestObjectProperty
+import com.kms.katalon.core.testobject.TestObject
 
-import com.kms.katalon.core.mobile.helper.MobileElementCommonHelper
-import com.kms.katalon.core.util.KeywordUtil
 
-import com.kms.katalon.core.webui.exception.WebElementNotFoundException
+import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 
-import cucumber.api.java.en.And
-import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 
@@ -95,32 +59,65 @@ class Payment {
 	}
 
 
-	
+
 	@Then("I select to buy item")
 	def I_select_to_buy_item(){
-		
-//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_My account/i_'), 3000)
-//		WebUI.mouseOver(findTestObject('Page_Payment/Page_Search/img'));
+
+		//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_My account/i_'), 3000)
+		//		WebUI.mouseOver(findTestObject('Page_Payment/Page_Search/img'));
 		WebUI.click(findTestObject('Page_Payment/Page_Search/img'))
-		
-//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_Search/img'), 3000)
-		WebUI.click(findTestObject('Page_Payment/Page_Customizable mug/button_    Add to cart'))
+
+		//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_Search/img'), 3000)
+		//		WebUI.click(findTestObject('Page_Payment/Page_Customizable mug/button_    Add to cart'))
+		WebUI.click(findTestObject('Object Repository/Page_Mug The best is yet to come/button_Add to cart'))
 		println "debug"
 	}
-	
+
 	@Then("I move to checkout from cart")
 	def I_move_to_checkout_from_cart(){
 		println "Checkout from cart"
-//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_Customizable mug/button_            Add to cart'), 3000)
-//		WebUI.click(findTestObject('Page_Payment/Page_Customizable mug/a_Proceed to checkout'))
-		
-//		WebUI.verifyElementPresent(findTestObject('Page_Payment/a_Proceed to checkout'), 3000)
-//		WebUI.click(findTestObject('Object Repository/Page_Payment/Page_Cart/a_Proceed to checkout'))
-//		
-//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_Cart/a_Proceed to checkout'), 3000)
-//		WebUI.click(findTestObject('Page_Payment/Page_Ecommerse/button_Continue'))
-//		
-//		WebUI.click(findTestObject('Page_Payment/Page_Ecommerse/button_Continue_1'))	
+		//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_Customizable mug/button_            Add to cart'), 3000)
+		WebUI.click(findTestObject('Page_Payment/Page_Customizable mug/a_Proceed to checkout'))
 
+		//		WebUI.verifyElementPresent(findTestObject('Page_Payment/a_Proceed to checkout'), 3000)
+		WebUI.click(findTestObject('Object Repository/Page_Payment/Page_Cart/a_Proceed to checkout'))
+		//
+		//		WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_Cart/a_Proceed to checkout'), 3000)
+		WebUI.click(findTestObject('Page_Payment/Page_Ecommerse/button_Continue'))
+		//
+		WebUI.click(findTestObject('Page_Payment/Page_Ecommerse/button_Continue_1'))
+
+	}
+	
+
+	@When("I add a product into shopping cart")
+	def I_add_a_product_into_shopping_cart(List<Map<String, String>> product){
+		Map<String, String> productPrice = new HashMap<>();
+		for(int i=0; i<product.size(); i++) {
+			String productName = product.get(i).get("name")
+			WebUI.verifyElementPresent(findTestObject('Page_Payment/Page_My account/input_Art_s'), 3000)
+			WebUI.setText(findTestObject('Page_Payment/Page_My account/input_Art_s'), productName)
+			WebUI.click(findTestObject('Page_Payment/Page_My account/i_'))
+			
+//			String xpath = '//div[@id="' + dynamicId + '"]'
+			String xpath = '//a[contains(text(),\''+productName+'\')]';
+			TestObject to = new TestObject("objectName");
+			to.addProperty("xpath", ConditionType.EQUALS, xpath)
+			String titleProduct = WebUI.getText(to);
+			println titleProduct;
+			WebUI.closeBrowser();
+//			WebUI.click(to)
+			
+
+			//			String productPosition = "productPosition" + (i+1).toString();
+			//			productPrice.put(productPosition, price);
+			//			productPrice.get("product1");
+			//					System.out.println(product.get(i).get("price"));
+
+
+		}
+
+
+		//WebUI.click(findTestObject('Page_Payment/Page_My account/i_'))
 	}
 }
